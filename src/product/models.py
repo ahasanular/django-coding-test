@@ -33,6 +33,10 @@ class ProductVariantPrice(TimeStampMixin):
                                             related_name='product_variant_two')
     product_variant_three = models.ForeignKey(ProductVariant, on_delete=models.CASCADE, null=True,
                                               related_name='product_variant_three')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
     price = models.FloatField()
     stock = models.FloatField()
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.product_variant_one.variant_title) + " --- " + str(self.product.title)
