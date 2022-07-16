@@ -20,6 +20,7 @@ class CreateProductView(generic.TemplateView):
 
 
 # This is for saving those data come from frontend ***** UNFINISHED *******
+#               ONLY SAVE PRODUCT MODEL
 # This do not work. It only get those data and assign new product and product variant table but don't SAVE.
 class AddProductView(generic.CreateView):
     def post(self, request, *args, **kwargs):
@@ -30,7 +31,7 @@ class AddProductView(generic.CreateView):
             print(data)
 
             product = Product(title=data['title'], sku=data['sku'], description=data['description'])
-            # product.save()
+            product.save()
 
             product_variant_all = []
             product_variant = ProductVariant(variant_title=data['product_variant[0][tags][]'],
