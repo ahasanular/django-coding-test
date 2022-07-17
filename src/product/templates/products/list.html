@@ -91,7 +91,8 @@
                                 {% endif %}
                             {% endfor %}
                         </dl>
-                        <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
+<!--                        <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more-->
+                        <button onclick="show_more(this)" class="btn btn-sm btn-link">Show more
                         </button>
                     </td>
                     <td>
@@ -138,6 +139,10 @@
 <script>
     function variant_group(variant){
         window.location = "?variant=" + variant.value
+    }
+    function show_more(element){
+        console.log(element)
+        x = $(element).parent().children('dl').toggleClass('h-auto')
     }
 </script>
 {% endblock %}
