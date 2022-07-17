@@ -101,6 +101,7 @@ class ListProductView(generic.ListView):
 
         context.update(product_variants=queryset1)
         context.update(product_list=data)
+        context.update(total=len(context['page_obj'].paginator.object_list))
 
         return context
 

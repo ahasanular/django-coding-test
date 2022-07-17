@@ -111,7 +111,7 @@
     <div class="card-footer">
         <div class="row justify-content-between">
             <div class="col-md-6">
-                <p>Showing 1 to 5 out of 6</p>
+                <p>Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} out of {{ total }}</p>
             </div>
             <div class="col-md-2">
                 <div class="pagination">
