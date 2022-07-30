@@ -90,7 +90,7 @@
         </div>
       </div>
     </div>
-
+    <div><h2 id="errorFeedback"></h2></div>
     <button @click="saveProduct" type="submit" class="btn btn-lg btn-primary">Save</button>
     <button type="button" class="btn btn-secondary btn-lg">Cancel</button>
   </section>
@@ -189,11 +189,33 @@ export default {
         product_variant_prices: this.product_variant_prices
       }
 
-      axios.post('/product', product).then(response => {
-        console.log(response.data);
-      }).catch(error => {
-        console.log(error);
-      })
+      let cookies = document.cookie
+            .split(';')
+            .map(cookie => cookie.split('='))
+            .reduce((accumulator, [key, value]) => ({ ...accumulator, [key.trim()]: decodeURIComponent(value) }), {});
+
+      $.ajax({
+            type:"POST",
+            headers: {"X-CSRFToken": cookies.csrftoken},
+            url: "/product/add_products/",
+            data: JSON.stringify(product),
+            success: function(feedback){
+
+                console.log("Success Checking")
+                console.log(feedback)
+
+                if(feedback.status == 200){
+                    window.location = '/product/list/'
+                }
+                else if(feedback.status == 400){
+                    document.querySelector('#errorFeedback').innerHTML = feedback.message
+                }
+            },
+            error: function(feedback){
+                console.log("Error Checking")
+                console.log(feedback)
+            }
+        });
 
       console.log(product);
     }

@@ -20,6 +20,7 @@
                     <option selected disabled>--Select A Variant--</option>
                     <option disabled>--Color--</option>
                     <option value="Black">Black</option>
+                    <option value="White">White</option>
                     <option value="Red">Red</option>
                     <option value="Green">Green</option>
                     <option value="Orange">Orange</option>
@@ -68,15 +69,14 @@
                 </thead>
 
                 <tbody>
-                {% for dt in product_list %}
+                {% for dt in data %}
                 <tr>
                     <td>{{ dt.id }}</td>
                     <td>{{ dt.title }} <br> Created at : {{ dt.created_at }}</td>
                     <td>{{ dt.description }}</td>
                     <td>
                         <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
-                            {% for variants in product_variants %}
-                                {% if variants.product.id == dt.id %}
+                            {% for variants in dt.productVariantPrice %}
                                     <dt class="col-sm-3 pb-0">
                                         {{ variants.product_variant_one.variant_title }}/
                                         {{ variants.product_variant_two.variant_title }}/
@@ -88,7 +88,6 @@
                                             <dd class="col-sm-8 pb-0">InStock : {{ variants.stock }}.</dd>
                                         </dl>
                                     </dd>
-                                {% endif %}
                             {% endfor %}
                         </dl>
 <!--                        <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more-->
@@ -112,23 +111,23 @@
     <div class="card-footer">
         <div class="row justify-content-between">
             <div class="col-md-6">
-                <p>Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} out of {{ total }}</p>
+                <p>Showing {{ data.start_index }} to {{ data.end_index }} out of {{ data.paginator.count }}</p>
             </div>
             <div class="col-md-2">
                 <div class="pagination">
                     <span class="step-links">
-                        {% if page_obj.has_previous %}
+                        {% if data.has_previous %}
                             <a href="?page=1">&laquo; first</a>
-                            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                            <a href="?page={{ data.previous_page_number }}">previous</a>
                         {% endif %}
 
                         <span class="current">
-                            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            Page {{ data.number }} of {{ data.paginator.num_pages }}.
                         </span>
 
-                        {% if page_obj.has_next %}
-                            <a href="?page={{ page_obj.next_page_number }}">next</a>
-                            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                        {% if data.has_next %}
+                            <a href="?page={{ data.next_page_number }}">next</a>
+                            <a href="?page={{ data.paginator.num_pages }}">last &raquo;</a>
                         {% endif %}
                     </span>
                 </div>
@@ -138,11 +137,30 @@
 </div>
 <script>
     function variant_group(variant){
-        window.location = "?variant=" + variant.value
+        // window.location = "?variant=" + variant.value
+
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('variant', variant.value);
+        window.location.search = urlParams;
     }
     function show_more(element){
         console.log(element)
         x = $(element).parent().children('dl').toggleClass('h-auto')
     }
+    document.addEventListener('readystatechange', event => {
+
+        // When HTML/DOM elements are ready:
+        if (event.target.readyState === "interactive") {
+            const urlParams = new URLSearchParams(window.location.search);
+            document.querySelector('[name="title"]').value = urlParams.get('title');
+            document.querySelector('[name="price_from"]').value = urlParams.get('price_from');
+            document.querySelector('[name="price_to"]').value = urlParams.get('price_to');
+            document.querySelector('[name="date"]').value = urlParams.get('date');
+
+            if (urlParams.get('variant')) {
+                document.querySelector('[name="variant"]').value = urlParams.get('variant');
+            }
+        }
+    });
 </script>
 {% endblock %}
